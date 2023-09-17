@@ -53,7 +53,6 @@ namespace RockPaperScissor.BusinessLogic
                 if (weapon != null && IsWeaponValid(weapon))
                 {
                     UserWeapon = (int)(Weapon)Enum.Parse(typeof(Weapon), weapon.ToLower().CapitalizeFirstLetter());
-                    Console.WriteLine(UserWeapon);
                     GameRound++;
                     break;
                 }
@@ -106,31 +105,31 @@ namespace RockPaperScissor.BusinessLogic
             }
         }
 
-        public string ProcessTheResult()
+        public StatisticModel ProcessTheResult()
         {
             var saveResultModel = new SaveResultsModel();
             if (Result == (int)Results.Draw)
             {
                 saveResultModel.Draw = true;
 
-                fileManager.SaveResults(saveResultModel);
+                Console.WriteLine($"The result is draw. The computer choose also: {((Weapon)ComputerWeapon).ToString().ToLower()}");
 
-                return $"The result is draw. The computer choose also: {((Weapon)ComputerWeapon).ToString().ToLower()}";
+                return fileManager.SaveResults(saveResultModel);
             }
             else if(Result == (int)Results.Lose)
             {
                 saveResultModel.Loose = true;
 
-                fileManager.SaveResults(saveResultModel);
+                Console.WriteLine($"You lost, computer chose {((Weapon)ComputerWeapon).ToString().ToLower()} and won");
 
-                return $"You lost, computer chose {((Weapon)ComputerWeapon).ToString().ToLower()} and won";
+                return fileManager.SaveResults(saveResultModel);
             }
 
             saveResultModel.Win = true;
 
-            fileManager.SaveResults(saveResultModel);
+            Console.WriteLine($"You won, computer chose {((Weapon)ComputerWeapon).ToString().ToLower()} and loosed");
 
-            return $"You won, computer chose {((Weapon)ComputerWeapon).ToString().ToLower()} and loosed";
+            return fileManager.SaveResults(saveResultModel);
         }
 
        
@@ -143,8 +142,8 @@ namespace RockPaperScissor.BusinessLogic
                 SelectTheWeaponFromTheUser();
                 DecideTheWinner();
                 
-                var resultMessage = ProcessTheResult();
-                Console.WriteLine(resultMessage);
+                var statistics = ProcessTheResult();
+                Console.WriteLine($"{statistics.Win.ToString("0.00")}% won by user, {statistics.Loose.ToString("0.00")}% won  by computer, {statistics.Draw.ToString("0.00")}% draws");
 
             }
         }

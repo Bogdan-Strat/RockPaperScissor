@@ -17,20 +17,25 @@ namespace RockPaperScissor.BusinessLogic
             statisticFilePath = @"C:\Users\strat\source\repos\RockPaperScissor\RockPaperScissor\Resources\Statistics.txt";
         }
 
-        public void SaveResults(SaveResultsModel model)
+        public StatisticModel SaveResults(SaveResultsModel model)
         {
+            int wins, draws, looses;
             if (!File.Exists(statisticFilePath))
             {
-                WriteResultsInFile(model.Win == true ? 1 : 0, model.Draw == true ? 1 : 0, model.Loose == true ? 1 : 0);
+                wins = model.Win == true ? 1 : 0;
+                draws = model.Draw == true ? 1 : 0;
+                looses = model.Loose == true ? 1 : 0;
+
+                WriteResultsInFile(wins, draws, looses);
             }
             else
             {
                 var lines = File.ReadAllLines(statisticFilePath);
 
-                int wins, draws, looses;
-                Int32.TryParse(lines[0].Split(' ')[1], out wins);
-                Int32.TryParse(lines[1].Split(' ')[1], out draws);
-                Int32.TryParse(lines[2].Split(' ')[1], out looses);
+               
+                int.TryParse(lines[0].Split(' ')[1], out wins);
+                int.TryParse(lines[1].Split(' ')[1], out draws);
+                int.TryParse(lines[2].Split(' ')[1], out looses);
                 if (model.Win)
                 {
                     wins++;
@@ -47,6 +52,8 @@ namespace RockPaperScissor.BusinessLogic
                 WriteResultsInFile(wins, draws, looses);
 
             }
+
+            return GetStatistics(wins, draws, looses);
         }
 
         public void WriteResultsInFile(int wins, int draws, int looses)
@@ -57,6 +64,18 @@ namespace RockPaperScissor.BusinessLogic
                     $"Draw: {draws}\n" +
                     $"Loose: {looses}\n");
             }
+        }
+
+        public StatisticModel GetStatistics(int wins, int draws, int looses)
+        {
+            decimal allGames = wins + draws + looses;
+
+            return new StatisticModel()
+            {
+                Win = wins / allGames * 100,
+                Draw = draws / allGames * 100,
+                Loose = looses / allGames * 100
+            };
         }
     }
 }
