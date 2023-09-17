@@ -50,7 +50,7 @@ namespace RockPaperScissor.BusinessLogic
                 }
                 else
                 {
-                    Console.WriteLine("Weapon is invalid. Please select again.\nChoose your weapon");
+                    Console.WriteLine("Weapon is invalid. Please select again.");
                 }
             }
         }
@@ -94,6 +94,33 @@ namespace RockPaperScissor.BusinessLogic
                 {
                     Result = (int)Results.Win;
                 }
+            }
+        }
+
+        public string ProcessTheResult()
+        {
+            if(Result == (int)Results.Draw)
+            {
+                return $"The result is draw. The computer choose also: {((Weapon)ComputerWeapon).ToString().ToLower()}";
+            }
+            else if(Result == (int)Results.Lose)
+            {
+                return $"You lost, computer chose {((Weapon)ComputerWeapon).ToString().ToLower()} and won";
+            }
+
+            return $"You won, computer chose {((Weapon)ComputerWeapon).ToString().ToLower()} and loosed";
+        }
+
+        public void Play()
+        {
+            while (true)
+            {
+                GenerateComputerWeapon();
+                SelectTheWeaponFromTheUser();
+                DecideTheWinner();
+                var resultMessage = ProcessTheResult();
+                Console.WriteLine(resultMessage);
+
             }
         }
     }
