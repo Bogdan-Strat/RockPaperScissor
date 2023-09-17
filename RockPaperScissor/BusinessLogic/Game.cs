@@ -1,7 +1,9 @@
-﻿using RockPaperScissor.ExtensionMethods;
+﻿using RockPaperScissor.BusinessLogic.Models;
+using RockPaperScissor.ExtensionMethods;
 using RockPaperScissor.Resources;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +17,13 @@ namespace RockPaperScissor.BusinessLogic
         public static int GameRound { get; set; } = 1;
         public int Result { get; set; }
 
+       private readonly FileManager fileManager;
+
+        public Game()
+        {
+            fileManager = new FileManager();
+        }
+       
         public void GenerateComputerWeapon()
         {
             var random = new Random();
@@ -99,17 +108,32 @@ namespace RockPaperScissor.BusinessLogic
 
         public string ProcessTheResult()
         {
-            if(Result == (int)Results.Draw)
+            var saveResultModel = new SaveResultsModel();
+            if (Result == (int)Results.Draw)
             {
+                saveResultModel.Draw = true;
+
+                fileManager.SaveResults(saveResultModel);
+
                 return $"The result is draw. The computer choose also: {((Weapon)ComputerWeapon).ToString().ToLower()}";
             }
             else if(Result == (int)Results.Lose)
             {
+                saveResultModel.Loose = true;
+
+                fileManager.SaveResults(saveResultModel);
+
                 return $"You lost, computer chose {((Weapon)ComputerWeapon).ToString().ToLower()} and won";
             }
 
+            saveResultModel.Win = true;
+
+            fileManager.SaveResults(saveResultModel);
+
             return $"You won, computer chose {((Weapon)ComputerWeapon).ToString().ToLower()} and loosed";
         }
+
+       
 
         public void Play()
         {
@@ -118,6 +142,7 @@ namespace RockPaperScissor.BusinessLogic
                 GenerateComputerWeapon();
                 SelectTheWeaponFromTheUser();
                 DecideTheWinner();
+                
                 var resultMessage = ProcessTheResult();
                 Console.WriteLine(resultMessage);
 
