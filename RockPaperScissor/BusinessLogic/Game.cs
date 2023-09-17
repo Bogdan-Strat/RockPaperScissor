@@ -64,15 +64,15 @@ namespace RockPaperScissor.BusinessLogic
         }
 
 
-        public void DecideTheWinner()
+        public void DecideTheWinner(int userWeapon, int computerWeapon)
         {
-            if(UserWeapon == ComputerWeapon)
+            if(userWeapon == computerWeapon)
             {
                 Result = (int)Results.Draw;
             }
-            else if(UserWeapon == (int)Weapon.Rock)
+            else if(userWeapon == (int)Weapon.Rock)
             {
-                if(ComputerWeapon == (int)Weapon.Paper)
+                if(computerWeapon == (int)Weapon.Paper)
                 {
                     Result = (int)Results.Lose;
                 }
@@ -81,9 +81,9 @@ namespace RockPaperScissor.BusinessLogic
                     Result = (int)Results.Win;
                 }
             }
-            else if (UserWeapon == (int)Weapon.Paper)
+            else if (userWeapon == (int)Weapon.Paper)
             {
-                if (ComputerWeapon == (int)Weapon.Scissor)
+                if (computerWeapon == (int)Weapon.Scissor)
                 {
                     Result = (int)Results.Lose;
                 }
@@ -92,9 +92,9 @@ namespace RockPaperScissor.BusinessLogic
                     Result = (int)Results.Win;
                 }
             }
-            else if (UserWeapon == (int)Weapon.Scissor)
+            else if (userWeapon == (int)Weapon.Scissor)
             {
-                if (ComputerWeapon == (int)Weapon.Rock)
+                if (computerWeapon == (int)Weapon.Rock)
                 {
                     Result = (int)Results.Lose;
                 }
@@ -140,7 +140,7 @@ namespace RockPaperScissor.BusinessLogic
             {
                 GenerateComputerWeapon();
                 SelectTheWeaponFromTheUser();
-                DecideTheWinner();
+                DecideTheWinner(UserWeapon, ComputerWeapon);
                 
                 var statistics = ProcessTheResult();
                 Console.WriteLine($"{statistics.Win.ToString("0.00")}% won by user, {statistics.Loose.ToString("0.00")}% won  by computer, {statistics.Draw.ToString("0.00")}% draws");
