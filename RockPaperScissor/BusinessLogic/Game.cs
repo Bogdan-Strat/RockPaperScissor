@@ -105,7 +105,7 @@ namespace RockPaperScissor.BusinessLogic
             }
         }
 
-        public StatisticModel ProcessTheResult()
+        public async Task<StatisticModel> ProcessTheResult()
         {
             var saveResultModel = new SaveResultsModel();
             if (Result == (int)Results.Draw)
@@ -114,7 +114,7 @@ namespace RockPaperScissor.BusinessLogic
 
                 Console.WriteLine($"The result is draw. The computer choose also: {((Weapon)ComputerWeapon).ToString().ToLower()}");
 
-                return fileManager.SaveResults(saveResultModel);
+                return await fileManager.SaveResults(saveResultModel);
             }
             else if(Result == (int)Results.Lose)
             {
@@ -122,19 +122,19 @@ namespace RockPaperScissor.BusinessLogic
 
                 Console.WriteLine($"You lost, computer chose {((Weapon)ComputerWeapon).ToString().ToLower()} and won");
 
-                return fileManager.SaveResults(saveResultModel);
+                return await fileManager.SaveResults(saveResultModel);
             }
 
             saveResultModel.Win = true;
 
             Console.WriteLine($"You won, computer chose {((Weapon)ComputerWeapon).ToString().ToLower()} and loosed");
 
-            return fileManager.SaveResults(saveResultModel);
+            return await fileManager.SaveResults(saveResultModel);
         }
 
        
 
-        public void Play()
+        public async Task Play()
         {
             while (true)
             {
@@ -142,8 +142,8 @@ namespace RockPaperScissor.BusinessLogic
                 SelectTheWeaponFromTheUser();
                 DecideTheWinner(UserWeapon, ComputerWeapon);
                 
-                var statistics = ProcessTheResult();
-                Console.WriteLine($"{statistics.Win.ToString("0.00")}% won by user, {statistics.Loose.ToString("0.00")}% won  by computer, {statistics.Draw.ToString("0.00")}% draws");
+                var statistics = await ProcessTheResult();
+                Console.WriteLine($"{statistics.Win}% won by user, {statistics.Loose}% won  by computer, {statistics.Draw}% draws");
 
             }
         }

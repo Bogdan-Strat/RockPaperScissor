@@ -8,8 +8,8 @@ namespace RockPaperScissor.BusinessLogic.Models
 {
     public class StatisticModel
     {
-        public decimal Win { get; set; }
-        public decimal Draw { get; set; }
-        public decimal Loose { get; set; }
+        public string Win { get; set; }
+        public string Draw { get; set; }
+        public string Loose { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace RockPaperScissor.BusinessLogic
             statisticFilePath = @"C:\Users\strat\source\repos\RockPaperScissor\RockPaperScissor\Resources\Statistics.txt";
         }
 
-        public StatisticModel SaveResults(SaveResultsModel model)
+        public async Task<StatisticModel> SaveResults(SaveResultsModel model)
         {
             int wins, draws, looses;
             if (!File.Exists(statisticFilePath))
@@ -26,11 +26,11 @@ namespace RockPaperScissor.BusinessLogic
                 draws = model.Draw == true ? 1 : 0;
                 looses = model.Loose == true ? 1 : 0;
 
-                WriteResultsInFile(wins, draws, looses);
+                await WriteResultsInFile(wins, draws, looses, statisticFilePath);
             }
             else
             {
-                var lines = File.ReadAllLines(statisticFilePath);
+                var lines = await File.ReadAllLinesAsync(statisticFilePath);
 
                
                 int.TryParse(lines[0].Split(' ')[1], out wins);
@@ -49,20 +49,21 @@ namespace RockPaperScissor.BusinessLogic
                     looses++;
                 }
 
-                WriteResultsInFile(wins, draws, looses);
+                await WriteResultsInFile(wins, draws, looses, statisticFilePath);
 
             }
 
             return GetStatistics(wins, draws, looses);
         }
 
-        public void WriteResultsInFile(int wins, int draws, int looses)
+        public async Task WriteResultsInFile(int wins, int draws, int looses, string filePath)
         {
-            using (var outputFile = new StreamWriter(statisticFilePath))
+            using (var outputFile = new StreamWriter(filePath))
             {
-                outputFile.Write($"Win: {wins}\n" +
+               await outputFile.WriteAsync($"Win: {wins}\n" +
                     $"Draw: {draws}\n" +
                     $"Loose: {looses}\n");
+                outputFile.Close();
             }
         }
 
@@ -72,9 +73,9 @@ namespace RockPaperScissor.BusinessLogic
 
             return new StatisticModel()
             {
-                Win = wins / allGames * 100,
-                Draw = draws / allGames * 100,
-                Loose = looses / allGames * 100
+                Win = (wins / allGames * 100).ToString("0.00"),
+                Draw = (draws / allGames * 100).ToString("0.00"),
+                Loose = (looses / allGames * 100).ToString("0.00")
             };
         }
     }
