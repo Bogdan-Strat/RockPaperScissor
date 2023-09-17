@@ -13,6 +13,7 @@ namespace RockPaperScissor.BusinessLogic
         public int UserWeapon { get; set; }
         public int ComputerWeapon { get; set; }
         public static int GameRound { get; set; } = 1;
+        public int Result { get; set; }
 
         public void GenerateComputerWeapon()
         {
@@ -50,6 +51,48 @@ namespace RockPaperScissor.BusinessLogic
                 else
                 {
                     Console.WriteLine("Weapon is invalid. Please select again.\nChoose your weapon");
+                }
+            }
+        }
+
+
+        public void DecideTheWinner()
+        {
+            if(UserWeapon == ComputerWeapon)
+            {
+                Result = (int)Results.Draw;
+            }
+            else if(UserWeapon == (int)Weapon.Rock)
+            {
+                if(ComputerWeapon == (int)Weapon.Paper)
+                {
+                    Result = (int)Results.Lose;
+                }
+                else
+                {
+                    Result = (int)Results.Win;
+                }
+            }
+            else if (UserWeapon == (int)Weapon.Paper)
+            {
+                if (ComputerWeapon == (int)Weapon.Scissor)
+                {
+                    Result = (int)Results.Lose;
+                }
+                else
+                {
+                    Result = (int)Results.Win;
+                }
+            }
+            else if (UserWeapon == (int)Weapon.Scissor)
+            {
+                if (ComputerWeapon == (int)Weapon.Rock)
+                {
+                    Result = (int)Results.Lose;
+                }
+                else
+                {
+                    Result = (int)Results.Win;
                 }
             }
         }
